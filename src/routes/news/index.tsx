@@ -11,7 +11,7 @@ export const Route = createFileRoute('/news/')({
 
   head: () => ({
     meta: [
-      ...seo({ title: 'News - TanStack Start', description: 'Latest news articles', keywords:"news", image: 'http://korea-mm-guide-api-latest.onrender.com/uploads/1764135231226-V-2agV92-wLdL6OQL2u_ig.jpg' }),
+      ...seo({ title: 'News - TanStack Start', description: 'Latest news articles', keywords:"news", image: 'https://images.unsplash.com/photo-1761839257349-037aea1d94de?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }),
     ],
   }),
 })
