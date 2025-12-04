@@ -51,6 +51,21 @@ export async function getArticles(
 }
 
 const serverFn = createServerFn({method: 'GET'}).handler(getArticles);
+const getArticleServerFn = createServerFn({ method: 'GET' })
+.inputValidator((data: { id: string }) => data)
+.handler(async ({ data }) => {
+    const res = await api.get(`/articles/${data.id}`);
+    return res.data;
+});
+
+export const getArticleQueryOptions = (params: any) => {
+    return queryOptions(
+        {
+            queryKey: ["article", params],
+            queryFn: () => getArticleServerFn(params),
+        }
+    )
+}
 
 export const getAllNewsQueryOptions = (params: any) => {
     return queryOptions(
