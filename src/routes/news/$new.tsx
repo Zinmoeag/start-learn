@@ -4,18 +4,37 @@ import { AppErrorBoundary } from "@/core/error";
 import DetailSection from "@/features/news/components/DetailSection";
 import MostViewedNewsSection from "@/features/news/components/MostViewedNewsSection";
 import { getArticleQueryOptions } from "@/features/news/query";
+import { seo } from "@/ulits/seo";
 
 export const Route = createFileRoute("/news/$new")({
   component: RouteComponent,
   loader: async ({ context, params }) => {
-    await context.queryClient.prefetchQuery(getArticleQueryOptions({ data: { id: params.new } }));
+    const response = await context.queryClient.ensureQueryData(getArticleQueryOptions({ data: { id: params.new } }));
+    return {
+      articleDetail: response.result
+    }
+  },
+  head: ({ params, loaderData }) => {
+    if (!loaderData) return;
+    
+    const article = loaderData.articleDetail[0];
+    return {
+      meta: [
+        ...seo({
+          title: article.title,
+          description: article.content.slice(1, 30),
+          keywords: "news",
+          image: article.image.link
+        }),
+      ],
+    };
   },
   errorComponent: ({ error }: { error: Error }) => {
     return (
       <ErrorPage
         statusCode={500}
         title="Something went wrong"
-        message="An unexpected error occured. Try refreshing the page, or head back home."
+        message="An unexpected error occurred. Try refreshing the page, or head back home."
       />
     );
   },
@@ -38,7 +57,7 @@ function RouteComponent() {
             <AppErrorBoundary
               fallback={
                 {
-                  // notFound: <div>Not Found</div>,
+                  notFound: <div>Not Found</div>,
                   // default: <div>Default Page</div>,
                 }
               }
