@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { getAllNewsQueryOptions } from '@/features/news/query'
 import { seo } from '@/ulits/seo'
 
@@ -25,10 +25,12 @@ function RouteComponent() {
   return (
     <section>
       {dd.data?.result?.paginatedData.map((article: any) => (
+        <Link to={`/news/${article.id}`}>
         <article key={article.id} className="mb-6 p-4 border border-gray-300 rounded">
           <h2 className="text-xl font-bold mb-2">{article.title}</h2>
           <p className="text-gray-600">{article.description}</p>
         </article>
+        </Link>
       ))}
     </section>
   )
