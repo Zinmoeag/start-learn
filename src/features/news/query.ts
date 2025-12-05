@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query"
 import { createServerFn } from "@tanstack/react-start";
 import api from "@/lib/axios";
+import { AppError, errorKinds, getErrorKindsFromHttpStatus } from "@/core/error";
 
 export async function getArticles(
     params?: any
@@ -51,11 +52,16 @@ export async function getArticles(
 }
 
 const serverFn = createServerFn({method: 'GET'}).handler(getArticles);
+
 const getArticleServerFn = createServerFn({ method: 'GET' })
 .inputValidator((data: { id: string }) => data)
 .handler(async ({ data }) => {
-    const res = await api.get(`/articles/${data.id}`);
-    return res.data;
+    try {
+        const res = await api.get(`/articles/${data.id}`);
+        return res.data;
+    } catch (error) {
+        throw AppError.new(errorKinds.notAuthorized);
+    }
 });
 
 export const getArticleQueryOptions = (params: any) => {
