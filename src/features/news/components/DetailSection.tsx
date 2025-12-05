@@ -10,8 +10,6 @@ const DetailSection = () => {
     select: (res) => res.result,
   })
 
-  console.log("isError =================================", isError);
-
   const article = data[0];
   
   return (

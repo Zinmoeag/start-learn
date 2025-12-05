@@ -1,39 +1,25 @@
-import { errorKinds } from "@/core/error";
-
-const mockMostViewed = [
-  {
-    id: "1",
-    title: "Breaking News: Market Hits Record Highs",
-    createdAt: "2025-01-15T10:00:00.000Z",
-  },
-  {
-    id: "2",
-    title: "Tech Innovation: AI Transforming Future Jobs",
-    createdAt: "2025-01-11T08:30:00.000Z",
-  },
-  {
-    id: "3",
-    title: "Health Update: New Fitness Trends in 2025",
-    createdAt: "2025-01-10T14:45:00.000Z",
-  },
-];
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getMostViewedArticlesQueryOptions } from "@/features/news/query";
 
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString();
 };
 
 export const MostViewedNewsSection = () => {
-    throw new Error(errorKinds.notFound);
+  const { data, isError } = useSuspenseQuery({
+    ...getMostViewedArticlesQueryOptions({ page: 1, pageSize: 90000 }),
+  });
+
   return (
     <section>
       <div className="bg-white border border-gray-200 rounded-lg p-6 sticky top-8">
         <h2 className="text-xl font-bold text-gray-900 mb-6">Most Viewed</h2>
 
         <ol className="space-y-4">
-          {mockMostViewed.map((item, index) => (
+          {data.result.paginatedData.map((item: any, index: number) => (
             <li key={item.id}>
               <a
-                href={`/article/${item.id}`}
+                href={`/news/${item.id}`}
                 className="block group hover:text-blue-600 transition-colors"
               >
                 <div className="flex gap-3">

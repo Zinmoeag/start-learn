@@ -6,31 +6,20 @@ interface InternalServerErrorProps {
   padded?: boolean;
 }
 
-const DefaultInternalServerError = ({
-  children,
-  maxWidth = "500px",
-  padded = true,
-}: InternalServerErrorProps) => {
+const DefaultInternalServerError = ({ children, padded = true }: InternalServerErrorProps) => {
   return (
-    <div className="w-full min-h-screen flex items-center justify-center p-4 rounded-lg border border-gray-200">
-      <div
-        className={`w-full ${
-          padded ? "p-8" : ""
-        }`}
-        style={{ maxWidth }}
-      >
+    <div className="w-full flex items-center justify-center p-4 rounded-lg border border-gray-200">
+      <div className={`w-full ${padded ? "p-6" : ""}`}>
         {children ?? (
           <>
             <div className="flex flex-col items-center text-center space-y-4">
               <AlertTriangle className="w-12 h-12 text-red-500" />
 
-              <h1 className="text-2xl font-bold text-gray-900">
-                Internal Server Error
-              </h1>
+              <h1 className="text-2xl font-bold text-gray-900">Internal Server Error</h1>
 
               <p className="text-gray-600 leading-relaxed">
-                Something went wrong on our side.  
-                Please try again later or contact support if the issue persists.
+                Something went wrong on our side. Please try again later or contact support if the
+                issue persists.
               </p>
 
               <button
@@ -45,6 +34,6 @@ const DefaultInternalServerError = ({
       </div>
     </div>
   );
-}
+};
 
 export default DefaultInternalServerError;

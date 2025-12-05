@@ -5,26 +5,38 @@ import DetailSection from "@/features/news/components/DetailSection";
 import MostViewedNewsSection from "@/features/news/components/MostViewedNewsSection";
 import { getArticleQueryOptions } from "@/features/news/query";
 import { seo } from "@/ulits/seo";
+import RelatedNewsSection from "@/features/news/components/RelatedNewSection";
 
 export const Route = createFileRoute("/news/$new")({
   component: RouteComponent,
   loader: async ({ context, params }) => {
-    const response = await context.queryClient.ensureQueryData(getArticleQueryOptions({ data: { id: params.new } }));
+    const response = await context.queryClient.ensureQueryData(
+      getArticleQueryOptions({ data: { id: params.new } })
+    );
     return {
-      articleDetail: response.result
-    }
+      articleDetail: response.result,
+    };
   },
-  head: ({ params, loaderData }) => {
-    if (!loaderData) return;
-    
+  head: ({ loaderData }) => {
+    if (!loaderData)
+      return {
+        meta: [
+          ...seo({
+            title: "News - TanStack Start",
+            description: "Latest news articles",
+            keywords: "news",
+          }),
+        ],
+      };
     const article = loaderData.articleDetail[0];
+
     return {
       meta: [
         ...seo({
           title: article.title,
           description: article.content.slice(1, 30),
           keywords: "news",
-          image: article.image.link
+          image: article.image.link,
         }),
       ],
     };
@@ -54,16 +66,13 @@ function RouteComponent() {
               ← Back to List
             </Link>
 
-            <AppErrorBoundary
-              fallback={
-                {
-                  notFound: <div>Not Found</div>,
-                  // default: <div>Default Page</div>,
-                }
-              }
-            >
-              <DetailSection />
-            </AppErrorBoundary>
+            <DetailSection />
+
+            <div className="mt-10 w-full min-h-[300px] overflow-y-auto">
+              <AppErrorBoundary>
+                <RelatedNewsSection />
+              </AppErrorBoundary>
+            </div>
           </div>
 
           {/* Sidebar */}

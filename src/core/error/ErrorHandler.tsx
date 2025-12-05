@@ -1,12 +1,12 @@
-import { 
-  DefaultAccessDeniedPage, 
-  DefaultInternalServerError, 
+import {
+  DefaultAccessDeniedPage,
+  DefaultInternalServerError,
   DefaultNotFound,
-  DefaultUnAuthorized
+  DefaultUnAuthorized,
 } from "./components";
 
-import { errorKinds  } from "./constants/errorKinds";
-import type {Fallback, errorKindsType} from "./types";
+import { errorKinds } from "./constants/errorKinds";
+import type { Fallback, errorKindsType } from "./types";
 
 interface ErrorHandlerProps {
   errorType: errorKindsType;
@@ -14,16 +14,20 @@ interface ErrorHandlerProps {
 }
 
 const ErrorHandler = ({ errorType, fallback }: ErrorHandlerProps) => {
-  console.log(errorType, "errorType ==>");
   const fallbackComponent = fallback?.[errorType];
   const defaultFallbackComponent = fallback?.["default"];
-  
+
   if (fallbackComponent) return fallbackComponent;
   if (defaultFallbackComponent) return defaultFallbackComponent;
 
   switch (errorType) {
-      case errorKinds.accessDenied:
-        return <DefaultAccessDeniedPage title="Access Denied" message="You do not have permission to view this feature." />;
+    case errorKinds.accessDenied:
+      return (
+        <DefaultAccessDeniedPage
+          title="Access Denied"
+          message="You do not have permission to view this feature."
+        />
+      );
     case errorKinds.alreadyExist:
       return <div>Already Exist</div>;
     case errorKinds.badRequest:

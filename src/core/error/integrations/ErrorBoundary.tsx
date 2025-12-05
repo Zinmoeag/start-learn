@@ -22,7 +22,6 @@ class AppErrorBoundary extends Component<AppErrorBoundaryWithChildren> {
       error: null,
       fallback: props.fallback ?? null,
     };
-    console.log(props.fallback, "fallback ==>");
   }
 
   static getDerivedStateFromError(error: Error) {
@@ -37,8 +36,12 @@ class AppErrorBoundary extends Component<AppErrorBoundaryWithChildren> {
     if (this.state.hasError) {
       if (this.state.error) {
         if (this.state.error instanceof Error) {
-            console.log(this.state.error.message, "error.message ==>");
-          return <ErrorHandler errorType={this.state.error.message as errorKindsType} fallback={this.state.fallback ?? undefined} />;
+          return (
+            <ErrorHandler
+              errorType={this.state.error.message as errorKindsType}
+              fallback={this.state.fallback ?? undefined}
+            />
+          );
         }
       }
 

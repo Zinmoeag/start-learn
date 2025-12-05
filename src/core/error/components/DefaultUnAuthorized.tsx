@@ -3,8 +3,6 @@ import { ShieldAlert } from "lucide-react";
 import { DefaultInternalServerError } from ".";
 
 const DefaultUnAuthorized = () => {
-  console.log("DefaultUnAuthorized ==>");
-  const hello = "mello";
   return (
     <DefaultInternalServerError>
       <div>

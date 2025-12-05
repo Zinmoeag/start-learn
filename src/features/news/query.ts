@@ -1,8 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { notFound } from "@tanstack/react-router";
 import api from "@/lib/axios";
 import { AppError, errorKinds, getErrorKindsFromHttpStatus } from "@/core/error";
-import { notFound } from '@tanstack/react-router'
 
 export async function getArticles(params?: any) {
   // Support both old and new parameter formats for backward compatibility
@@ -50,8 +50,25 @@ export async function getArticles(params?: any) {
   return data;
 }
 
-const serverFn = createServerFn({ method: "GET" }).handler(getArticles);
+export async function getMostViewedArticles(params?: any) {
+  try {
+    const queryParams: Record<string, string> = {
+      "pagination.page": "1",
+      "pagination.size": "10",
+    };
 
+    const searchParams = new URLSearchParams(queryParams);
+    const { data } = await api.get(`/articles?${searchParams.toString()}`);
+    return data;
+  } catch (error) {
+    throw AppError.new(getErrorKindsFromHttpStatus((error as any).status ?? 500));
+  }
+}
+
+const serverFn = createServerFn({ method: "GET" }).handler(getArticles);
+const getMostViewedArticlesServerFn = createServerFn({ method: "GET" }).handler(
+  getMostViewedArticles
+);
 const getArticleServerFn = createServerFn({ method: "GET" })
   .inputValidator((data: { id: string }) => data)
   .handler(async ({ data }) => {
@@ -59,7 +76,7 @@ const getArticleServerFn = createServerFn({ method: "GET" })
       const res = await api.get(`/articles/${data.id}`);
       return res.data;
     } catch (error) {
-      throw notFound()
+      throw notFound();
     }
   });
 
@@ -67,6 +84,13 @@ export const getArticleQueryOptions = (params: any) => {
   return queryOptions({
     queryKey: ["article", params],
     queryFn: () => getArticleServerFn(params),
+  });
+};
+
+export const getMostViewedArticlesQueryOptions = (params: any) => {
+  return queryOptions({
+    queryKey: ["mostViewedArticles", params],
+    queryFn: () => getMostViewedArticlesServerFn(params),
   });
 };
 
